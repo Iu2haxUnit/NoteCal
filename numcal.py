@@ -2,51 +2,42 @@
 import random as r
 from Tkinter import *
 import threading
+from decimal import Decimal
 
 #
 #   Ohjelmoija: Arttu Koskinen
 #   
 #   Kuvaus:
 #   
-#   Huomioitavaa: " THREADING " importtia k√§ytet√§√§n vain viiveen luomiseen " TIME.SLEEP " sijasta.
+#   Huomioitavaa: " THREADING " importtia k‰ytet‰‰n vain viiveen luomiseen " TIME.SLEEP " sijasta.
 #   
 
 
 
-
-#    Tkinter k√§ytt√∂liittym√§n luonti
+#    Tkinter k‰yttˆliittym‰n luonti
 root = Tk()
-root.minsize(450,285) #root.minsize(450,275)
+root.minsize(450,285)
 root.maxsize(450,285)
 root.title("NoteCal v0.01")
 
 
+spacer0 = Label(root, text="").grid(row=0,column=0,columnspan=5) #spacer <- luodaan tyhj‰ rivi
 
 
-#spacer0 = Label(root, text="").grid(row=0,column=0,columnspan=1) #spacer <- luodaan tyhj√§ rivi
-
-
-#spacer1 = Label(root, text="").grid(row=0,column=0,columnspan=1)
-
-spacer0 = Label(root, text="").grid(row=0,column=0,columnspan=5)
-
-
+# Luodaan StringVar muuttujat laskuhistorian n‰ytt‰mist‰ varten
 
 
 his1 = StringVar()
 his2 = StringVar()
 his3 = StringVar()
-
 his1.set("")
 his2.set("")
 his3.set("")
 
+#luodaan muuttuja, joka m‰‰rittelee mit‰ seuraavaksi tehd‰‰n
+
 laskutoimitus = IntVar()
 laskutoimitus.set(-1)
-print laskutoimitus.get()
-
-
-
 
 # -1 = ei laskutoimitusta
 # 0  = Jakolasku
@@ -59,9 +50,13 @@ print laskutoimitus.get()
 # 7  = Pluslasku uudelleen
 
 
-history1 = Label(root, textvariable=his1, width=22, anchor=E, text="", justify=RIGHT).grid(row=1,column=0,columnspan=5) #colspan 6 width 27
+# Luodaan Labelit historian n‰ytt‰miseen
+
+history1 = Label(root, textvariable=his1, width=22, anchor=E, text="", justify=RIGHT).grid(row=1,column=0,columnspan=5)
 history2 = Label(root, textvariable=his2, width=22, anchor=E, text="", justify=RIGHT).grid(row=2,column=0,columnspan=5)
 history3 = Label(root, textvariable=his3, width=22, anchor=E, text="", justify=RIGHT).grid(row=3,column=0,columnspan=5)
+
+# Luodaan funktiot nappuloille, jotka tulevat historialabeleiden viereen
 
 def historyB1():
     if len(notepad.get(1.0, END)) > 1:
@@ -89,7 +84,7 @@ def historyB4():
     else:
         notepad.insert(INSERT, str(ruutu.get()))
 
-
+# Luodaan nappulat historian liikuttelua varten
 
 history1button = Button(root, command=historyB1, height=0, width=1, text=">" ).grid(row=1,column=5,columnspan=1)
 history2button = Button(root, command=historyB2, height=0, width=1, text=">"  ).grid(row=2,column=5,columnspan=1)
@@ -97,17 +92,7 @@ history3button = Button(root, command=historyB3, height=0, width=1, text=">"  ).
 
 
 
-
-#spacer1 = Label(root, text="").grid(row=4,column=0,columnspan=7)
-
-#   Luodaan tekstiruutu
-
-#ruutuvariable = ruutu.get(1.0, END)
-#ruutuvar = IntVar()
-
-
-
-
+# Luodaan ruutu, johon voi n‰pp‰ill‰ numeroita
 
 ruutu = Entry(root, width=22, relief=FLAT, justify='right') #28
 ruutu.insert(END, "")
@@ -115,23 +100,23 @@ ruutucontent = ruutu.get()
 
 ruutu.grid(row=5, column=0, columnspan=5, ipady=10, pady=8) #colspan 6
 
+# Luodaan viel‰ yksi historianappi numeroikkunan viereen
+
 history4button = Button(root, command=historyB4, height=0, width=1, text=">"  ).grid(row=5,column=5,columnspan=1)
 
-
-#spacer2 = Label(root, text="").grid(row=6,column=0,columnspan=7)
-
+# Luodaan teksti-ikkuna, jossa tekstink‰sittely tapahtuu
 
 notepad = Text(root, width=38, height=18) #width 38 height 16
 notepad.grid(row=0, column=6, rowspan=11, padx=5)
 
 
-lasku = False
 
-# Luodaan nappulat
-# 7 8 9
-# 4 5 6
-# 1 2 3
-# 0
+lasku = False # Muuttuja keskener‰iselle toiminnolle
+
+
+
+# Luodaan paljon muuttujia nappuloille, jotta niiden sis‰ltˆ‰ voi muuttaa funktioista k‰sin
+
 
 numButton0var = StringVar()
 numButton0var.set("0")
@@ -178,6 +163,9 @@ numButtonMIINUSvar.set(" - ")
 numButtonPLUSvar = StringVar()
 numButtonPLUSvar.set(" + ")
 
+# Luodaan funktiot numeron‰pp‰imistˆlle
+
+
 def num0():
     ruutu.insert(END, numButton0var.get())
     return
@@ -218,6 +206,10 @@ def num9():
     ruutu.insert(END, numButton9var.get())
     return
 
+
+
+# Funktio laskutoimenpiteelle, jokainen n‰ist‰ tekee suunnilleen samat asiat
+
 def numJAKO():
     if lasku == False:
         global value1
@@ -231,6 +223,7 @@ def numJAKO():
     else:
         return
 
+# Funktio, joka ensin ottaa laskutoimituksen nimen ja sitten hoitaa value1 ja value2 oikein laskennan
     
 def numYHTKUIN():
     if laskutoimitus.get() == 0:
@@ -292,9 +285,6 @@ def numYHTKUIN():
         his2.set(his3.get())
         his3.set(his3.get() + str(value2) + " = " + str(lopputulos))
         laskutoimitus.set(7)
-
-#########
-
 
     elif laskutoimitus.get() == 4:
         lopputulos = float(value1) * float(value2)
@@ -358,6 +348,8 @@ def numYHTKUIN():
         laskutoimitus.set(7)
         return
 
+# Nollausnappulan funktio
+
 
 def numNOLLAA():
     value1 = 0
@@ -365,9 +357,13 @@ def numNOLLAA():
     ruutu.delete(0, END)
     laskutoimitus.set(-1)
 
+# Pilkkunappulan funktio
+
 def numPILKKU():
     ruutu.insert(END, numButtonPILKKUvar.get())
     return
+
+# Kertolasku
 
 def numKERTO():
     if lasku == False:
@@ -382,6 +378,8 @@ def numKERTO():
     else:
         return
 
+# V‰hennyslasku
+
 def numMIINUS():
     if lasku == False:
         global value1
@@ -394,6 +392,8 @@ def numMIINUS():
         return value1
     else:
         return
+
+# Yhteenlasku
 
 def numPLUS():
     if lasku == False:
@@ -408,6 +408,7 @@ def numPLUS():
     else:
         return
 
+# Numeroiden poistonappula
 
 def backspace():
     todo = ruutu.get()[:-1]
@@ -415,27 +416,9 @@ def backspace():
     ruutu.insert(END, todo)
     
 
-    
-    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-
+# Luodaan numeron‰pp‰imistˆn nappulat
 
 numButton0 = Button(root, textvariable=numButton0var, command=num0, text="0",height="2", width="10", bd=2)
 numButton0.grid(row=10,column=1, columnspan=2)
@@ -497,12 +480,7 @@ numButtonYHTKUIN.grid(row=9,column=5, columnspan=1, rowspan=2)
 
 
 
-
-
-
-
-
-# k√§ynnistet√§√§n k√§ytt√∂liittym√§
+# Viimein k‰ynnistet‰‰n k‰yttˆliittym‰
 
 root.mainloop()
 
