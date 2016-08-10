@@ -2,15 +2,6 @@
 import random as r
 from Tkinter import *
 import threading
-from decimal import Decimal
-
-#
-#   Ohjelmoija: Arttu Koskinen
-#   
-#   Kuvaus:
-#   
-#   Huomioitavaa: " THREADING " importtia k‰ytet‰‰n vain viiveen luomiseen " TIME.SLEEP " sijasta.
-#   
 
 
 
