@@ -8,9 +8,10 @@
                                           
 
 
+
 Welcome to the Readme file of NoteCal.
 
-  NoteCal is a simple calculator with integrated notepad. You can easily move values and expressions into the notepad with a
+  NoteCal is a simple Python calculator with integrated notepad. You can easily move values and expressions into the notepad with a
   press of a button, making simple calculations less copy-paste intensive.
   
   Unsolved Problems
