@@ -5,17 +5,17 @@ import threading
 
 
 
-#    Tkinter k‰yttˆliittym‰n luonti
+#    Tkinter k√§ytt√∂liittym√§n luonti
 root = Tk()
 root.minsize(450,285)
 root.maxsize(450,285)
-root.title("NoteCal v0.01")
+root.title("NoteCal v1.0")
 
 
-spacer0 = Label(root, text="").grid(row=0,column=0,columnspan=5) #spacer <- luodaan tyhj‰ rivi
+spacer0 = Label(root, text="").grid(row=0,column=0,columnspan=5) #spacer <- luodaan tyhj√§ rivi
 
 
-# Luodaan StringVar muuttujat laskuhistorian n‰ytt‰mist‰ varten
+# Luodaan StringVar muuttujat laskuhistorian n√§ytt√§mist√§ varten
 
 
 his1 = StringVar()
@@ -25,7 +25,7 @@ his1.set("")
 his2.set("")
 his3.set("")
 
-#luodaan muuttuja, joka m‰‰rittelee mit‰ seuraavaksi tehd‰‰n
+#luodaan muuttuja, joka m√§√§rittelee mit√§ seuraavaksi tehd√§√§n
 
 laskutoimitus = IntVar()
 laskutoimitus.set(-1)
@@ -41,7 +41,7 @@ laskutoimitus.set(-1)
 # 7  = Pluslasku uudelleen
 
 
-# Luodaan Labelit historian n‰ytt‰miseen
+# Luodaan Labelit historian n√§ytt√§miseen
 
 history1 = Label(root, textvariable=his1, width=22, anchor=E, text="", justify=RIGHT).grid(row=1,column=0,columnspan=5)
 history2 = Label(root, textvariable=his2, width=22, anchor=E, text="", justify=RIGHT).grid(row=2,column=0,columnspan=5)
@@ -83,7 +83,7 @@ history3button = Button(root, command=historyB3, height=0, width=1, text=">"  ).
 
 
 
-# Luodaan ruutu, johon voi n‰pp‰ill‰ numeroita
+# Luodaan ruutu, johon voi n√§pp√§ill√§ numeroita
 
 ruutu = Entry(root, width=22, relief=FLAT, justify='right') #28
 ruutu.insert(END, "")
@@ -91,22 +91,22 @@ ruutucontent = ruutu.get()
 
 ruutu.grid(row=5, column=0, columnspan=5, ipady=10, pady=8) #colspan 6
 
-# Luodaan viel‰ yksi historianappi numeroikkunan viereen
+# Luodaan viel√§ yksi historianappi numeroikkunan viereen
 
 history4button = Button(root, command=historyB4, height=0, width=1, text=">"  ).grid(row=5,column=5,columnspan=1)
 
-# Luodaan teksti-ikkuna, jossa tekstink‰sittely tapahtuu
+# Luodaan teksti-ikkuna, jossa tekstink√§sittely tapahtuu
 
 notepad = Text(root, width=38, height=18) #width 38 height 16
 notepad.grid(row=0, column=6, rowspan=11, padx=5)
 
 
 
-lasku = False # Muuttuja keskener‰iselle toiminnolle
+lasku = False # Muuttuja keskener√§iselle toiminnolle
 
 
 
-# Luodaan paljon muuttujia nappuloille, jotta niiden sis‰ltˆ‰ voi muuttaa funktioista k‰sin
+# Luodaan paljon muuttujia nappuloille, jotta niiden sis√§lt√∂√§ voi muuttaa funktioista k√§sin
 
 
 numButton0var = StringVar()
@@ -154,7 +154,7 @@ numButtonMIINUSvar.set(" - ")
 numButtonPLUSvar = StringVar()
 numButtonPLUSvar.set(" + ")
 
-# Luodaan funktiot numeron‰pp‰imistˆlle
+# Luodaan funktiot numeron√§pp√§imist√∂lle
 
 
 def num0():
@@ -199,145 +199,118 @@ def num9():
 
 
 
-# Funktio laskutoimenpiteelle, jokainen n‰ist‰ tekee suunnilleen samat asiat
+
+
+def hisRuutu(value2, lopputulos):
+        his1.set(his2.get())
+        his2.set(his3.get())
+        his3.set(his3.get() + value2 + " = " + str(lopputulos))
+        return
+
+# Funktio laskutoimenpiteelle, jokainen n√§ist√§ tekee suunnilleen samat asiat
 
 def numJAKO():
-    if lasku == False:
+    
         global value1
-        value1 = float(ruutu.get())
+        value1 = '{:,g}'.format(float(ruutu.get())).replace(',', '')
         laskutoimitus.set(0)
         ruutu.insert(END, numButtonJAKOvar.get())
         his3.set(ruutu.get())
         root.update()
         ruutu.delete(0, END)
-        return value1
-    else:
-        return
 
 # Funktio, joka ensin ottaa laskutoimituksen nimen ja sitten hoitaa value1 ja value2 oikein laskennan
     
 def numYHTKUIN():
     if laskutoimitus.get() == 0:
-        value2 = float(ruutu.get())
-        lopputulos = float(value1) / float(value2)
+        
+        global lopputulos
+        global value2
+        lopputulos = '{:,g}'.format(float(value1) / float(ruutu.get())).replace(',', '')
+        value2 = '{:,g}'.format(int(ruutu.get())).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
-        his1.set(his2.get())
-        his2.set(his3.get())
-        his3.set(his3.get() + str(value2) + " = " + str(lopputulos))
+        hisRuutu(value2, lopputulos)
         laskutoimitus.set(4)
 
     elif laskutoimitus.get() == 1:
-        value2 = float(ruutu.get())
-        lopputulos = float(value1) * float(value2)
+
+        global lopputulos
+        global value2
+        lopputulos = '{:,g}'.format(float(value1) * float(ruutu.get())).replace(',', '')
+        value2 = '{:,g}'.format(int(ruutu.get())).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
-        his1.set(his2.get())
-        his2.set(his3.get())
-        his3.set(his3.get() + str(value2) + " = " + str(lopputulos))
+        hisRuutu(value2, lopputulos)
         laskutoimitus.set(5)
 
     elif laskutoimitus.get() == 2:
-        value2 = float(ruutu.get())
-        lopputulos = float(value1) - float(value2)
+
+        global lopputulos
+        global value2
+        lopputulos = '{:,g}'.format(float(value1) - float(ruutu.get())).replace(',', '')
+        value2 = '{:,g}'.format(int(ruutu.get())).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
-        his1.set(his2.get())
-        his2.set(his3.get())
-        his3.set(his3.get() + str(value2) + " = " + str(lopputulos))
+        hisRuutu(value2, lopputulos)
         laskutoimitus.set(6)
 
     elif laskutoimitus.get() == 3:
-        value2 = float(ruutu.get())
-        lopputulos = float(value1) + float(value2)
+
+        global lopputulos
+        global value2
+        lopputulos = '{:,g}'.format(float(value1) + float(ruutu.get())).replace(',', '')
+        value2 = '{:,g}'.format(int(ruutu.get())).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
-        his1.set(his2.get())
-        his2.set(his3.get())
-        his3.set(his3.get() + str(value2) + " = " + str(lopputulos))
+        hisRuutu(value2, lopputulos)
         laskutoimitus.set(7)
 
     elif laskutoimitus.get() == 4:
-        lopputulos = float(value1) * float(value2)
+
+        valilopputulos = lopputulos
+        lopputulos = '{:,g}'.format(float(lopputulos) / float(value2)).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
         his1.set(his2.get())
         his2.set(his3.get())
-        his3.set(str(value1) + " / " + str(value2) + " = " + str(lopputulos))
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
+        his3.set(str(valilopputulos) + " / " + str(value2) + " = " + str(lopputulos))
         laskutoimitus.set(4)
-        return
 
     elif laskutoimitus.get() == 5:
-        lopputulos = float(value1) * float(value2)
+
+        valilopputulos = lopputulos
+        lopputulos = '{:,g}'.format(float(lopputulos) * float(value2)).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
         his1.set(his2.get())
         his2.set(his3.get())
-        his3.set(str(value1) + " * " + str(value2) + " = " + str(lopputulos))
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
+        his3.set(str(valilopputulos) + " * " + str(value2) + " = " + str(lopputulos))
         laskutoimitus.set(5)
-        return
 
 
     elif laskutoimitus.get() == 6:
-        lopputulos = float(value1) - float(value2)
+        
+        valilopputulos = lopputulos
+        lopputulos = '{:,g}'.format(float(lopputulos) - float(value2)).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
         his1.set(his2.get())
         his2.set(his3.get())
-        his3.set(str(value1) + " - " + str(value2) + " = " + str(lopputulos))
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
+        his3.set(str(valilopputulos) + " - " + str(value2) + " = " + str(lopputulos))
         laskutoimitus.set(6)
-        return
 
 
     elif laskutoimitus.get() == 7:
-        lopputulos = float(value1) + float(value2)
+
+        valilopputulos = lopputulos
+        lopputulos = '{:,g}'.format(float(lopputulos) + float(value2)).replace(',', '')
         ruutu.delete(0, END)
         ruutu.insert(END, lopputulos)
-        lopputulos = float(lopputulos)
         his1.set(his2.get())
         his2.set(his3.get())
-        his3.set(str(value1) + " + " + str(value2) + " = " + str(lopputulos))
-        global value1
-        value1 = lopputulos
-        global value2
-        value2 = value2
+        his3.set(str(valilopputulos) + " + " + str(value2) + " = " + str(lopputulos))
         laskutoimitus.set(7)
-        return
 
 # Nollausnappulan funktio
 
@@ -357,48 +330,39 @@ def numPILKKU():
 # Kertolasku
 
 def numKERTO():
-    if lasku == False:
+
         global value1
-        value1 = float(ruutu.get())
+        value1 = '{:,g}'.format(float(ruutu.get())).replace(',', '')
         laskutoimitus.set(1)
         ruutu.insert(END, numButtonKERTOvar.get())
         his3.set(ruutu.get())
         root.update()
         ruutu.delete(0, END)
-        return value1
-    else:
-        return
 
-# V‰hennyslasku
+# V√§hennyslasku
 
 def numMIINUS():
-    if lasku == False:
+
         global value1
-        value1 = float(ruutu.get())
+        value1 = '{:,g}'.format(float(ruutu.get())).replace(',', '')
         laskutoimitus.set(2)
         ruutu.insert(END, numButtonMIINUSvar.get())
         his3.set(ruutu.get())
         root.update()
         ruutu.delete(0, END)
-        return value1
-    else:
-        return
 
 # Yhteenlasku
 
 def numPLUS():
-    if lasku == False:
+
         global value1
-        value1 = float(ruutu.get())
+        value1 = '{:,g}'.format(float(ruutu.get())).replace(',', '')
         laskutoimitus.set(3)
         ruutu.insert(END, numButtonPLUSvar.get())
         his3.set(ruutu.get())
         root.update()
         ruutu.delete(0, END)
-        return value1
-    else:
-        return
-
+    
 # Numeroiden poistonappula
 
 def backspace():
@@ -409,7 +373,7 @@ def backspace():
 
 
 
-# Luodaan numeron‰pp‰imistˆn nappulat
+# Luodaan numeron√§pp√§imist√∂n nappulat
 
 numButton0 = Button(root, textvariable=numButton0var, command=num0, text="0",height="2", width="10", bd=2)
 numButton0.grid(row=10,column=1, columnspan=2)
@@ -471,25 +435,9 @@ numButtonYHTKUIN.grid(row=9,column=5, columnspan=1, rowspan=2)
 
 
 
-# Viimein k‰ynnistet‰‰n k‰yttˆliittym‰
+# Viimein k√§ynnistet√§√§n k√§ytt√∂liittym√§
 
 root.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
